@@ -2,6 +2,7 @@ package routes
 
 import (
 	"admodev/invexchange/cmd/gincmd"
+	usercontainer "admodev/invexchange/container/userContainer"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +17,11 @@ func healthCheckRoute() {
 	})
 }
 
+func createNewUser() {
+	r.POST("/user", usercontainer.CreateUser)
+}
+
 func InitializeRoutes() {
 	healthCheckRoute()
+	createNewUser()
 }
