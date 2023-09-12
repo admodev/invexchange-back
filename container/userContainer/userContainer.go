@@ -2,19 +2,19 @@ package usercontainer
 
 import (
 	usermodel "admodev/invexchange/model"
+	timetool "admodev/invexchange/tool"
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 type createUserInput struct {
-	FirstName      string    `json:"first_name" binding:"required"`
-	LastName       string    `json:"last_name" binding:"required"`
-	DocumentNumber string    `json:"document_number" binding:"required"`
-	Birthdate      time.Time `json:"birthdate" binding:"required"`
+	FirstName      string `json:"first_name" binding:"required"`
+	LastName       string `json:"last_name" binding:"required"`
+	DocumentNumber string `json:"document_number" binding:"required"`
+	Birthdate      string `json:"birthdate" binding:"required"`
 }
 
 func GetUsers() {
@@ -34,10 +34,11 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	user := usermodel.User{FirstName: userInput.FirstName, LastName: userInput.LastName, DocumentNumber: userInput.DocumentNumber, Birthdate: userInput.Birthdate}
+	user := usermodel.User{FirstName: userInput.FirstName, LastName: userInput.LastName, DocumentNumber: userInput.DocumentNumber, Birthdate: timetool.ParseDate(userInput.Birthdate)}
 
 	log.Println("INFO: User created.")
 
-	// TODO!: add user store in DB function call here...
+	storeUserInDatabase(user)
+
 	c.JSON(http.StatusOK, gin.H{"user": user})
 }
